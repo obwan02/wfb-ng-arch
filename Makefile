@@ -1,4 +1,4 @@
-ARCH ?= $(shell uname -i)
+ARCH ?= $(shell uname -m)
 PYTHON ?= /usr/bin/python3
 
 ifneq ("$(wildcard .git)","")
@@ -56,6 +56,14 @@ wfb_tun: src/wfb_tun.o
 test: all_bin
 	PYTHONPATH=`pwd` trial3 wfb_ng.tests
 
+archlinux_dist/PKGBUILD:
+	mkdir archlinux_dist
+	sed -e "s/{{VERSION}}/$(VERSION)/" -e "s/{{ARCH}}/$(ARCH)/" archlinux/PKGBUILD.template > $@
+
+archlinux: bdist archlinux_dist/PKGBUILD
+	cp dist/wfb_ng*.tar.gz -t archlinux_dist
+	cd archlinux_dist; makepkg
+
 rpm:  all_bin $(ENV)
 	rm -rf dist
 	$(PYTHON) ./setup.py bdist_rpm --force-arch $(ARCH)
@@ -81,7 +89,7 @@ pylint:
 	pylint --disable=R,C wfb_ng/*.py
 
 clean:
-	rm -rf env wfb_rx wfb_tx wfb_tx_cmd wfb_tun wfb_keygen dist deb_dist build wfb_ng.egg-info wfb-ng-*.tar.gz _trial_temp *~ src/*.o
+	rm -rf env wfb_rx wfb_tx wfb_tx_cmd wfb_tun wfb_keygen dist deb_dist build archlinux_dist wfb_ng.egg-info wfb-ng-*.tar.gz _trial_temp *~ src/*.o
 
 deb_docker:  /opt/qemu/bin
 	@if ! [ -d /opt/qemu ]; then echo "Docker cross build requires patched QEMU!\nApply ./scripts/qemu/qemu.patch to qemu-7.2.0 and build it:\n  ./configure --prefix=/opt/qemu --static --disable-system && make && sudo make install"; exit 1; fi

@@ -1,0 +1,30 @@
+# Maintainer: Your Name <youremail@domain.com>
+pkgname=wfb-ng
+pkgver="{{VERSION}}"
+pkgrel=1
+epoch=
+pkgdesc="wfb-ng port to arch"
+arch=("{{ARCH}}")
+url="https://github.com/obwan02/wfb-ng-arch"
+license=('GPLv3')
+groups=()
+depends=("python" "libsodium" "python-pyroute2" "python-twisted" "libpcap" "libsodium" "libevent" "python-future" "python-msgpack" "python-jinja")
+makedepends=()
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=("wfb_ng-$pkgver.linux-$arch.tar.gz")
+noextract=()
+sha256sums=("SKIP")
+validpgpkeys=()
+
+package() {
+	cp -r etc usr -t $pkgdir
+	cp -r lib -t $pkgdir/usr
+}
