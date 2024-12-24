@@ -1,3 +1,4 @@
+SHELL=/bin/bash
 ARCH ?= $(shell uname -m)
 PYTHON ?= /usr/bin/python3
 
@@ -24,8 +25,8 @@ _CFLAGS := $(CFLAGS) -Wall -O2 -fno-strict-aliasing -DWFB_VERSION='"$(VERSION)-$
 all: all_bin gs.key test
 
 $(ENV):
-	$(PYTHON) -m virtualenv $(ENV)
-	$$(PATH=$(ENV)/bin:$(ENV)/local/bin:$(PATH) which pip3) install --upgrade pip setuptools $(STDEB)
+	$(PYTHON) -m virtualenv $(ENV) --download
+	$$(PATH=$(ENV)/bin:$(ENV)/local/bin:$(PATH) which python3) -m pip install --upgrade pip setuptools $(STDEB)
 
 all_bin: wfb_rx wfb_tx wfb_keygen wfb_tx_cmd wfb_tun
 
